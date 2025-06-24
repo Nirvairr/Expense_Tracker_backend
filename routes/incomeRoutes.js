@@ -1,11 +1,11 @@
 const express = require("express");
 const {
-    addIncome,
-    getAllIncome,
-    deleteIncome,
-    downloadIncomeExcel
-} = require("../controllers/incomeController");
-const { protect } = require("../middleware/authMiddleWare");
+  addIncome,
+  getAllIncome,
+  deleteIncome,
+  downloadIncomeExcel,
+} = require("../controllers/incomeController.js");
+const { protect } = require("../middleware/authMiddleWare.js");
 
 const router = express.Router();
 
