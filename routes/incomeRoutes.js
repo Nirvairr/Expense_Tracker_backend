@@ -1,17 +1,17 @@
-const express = require("express");
-const {
+import { Router } from "express";
+import {
   addIncome,
   getAllIncome,
   deleteIncome,
   downloadIncomeExcel,
-} = require("../controllers/incomeController.js");
-const { protect } = require("../middleware/authMiddleWare");
+} from "../controllers/incomeController.js";
+import protect from "../middleware/authMiddleWare.js";
 
-const router = express.Router();
+const router = Router();
 
 router.post("/add", protect, addIncome);
 router.get("/get", protect, getAllIncome);
 router.get("/downloadexcel", protect, downloadIncomeExcel);
 router.delete("/:id", protect, deleteIncome);
 
-module.exports = router;
+export default router;

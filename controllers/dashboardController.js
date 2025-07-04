@@ -1,9 +1,9 @@
-const Income = require("../models/Income");
-const Expense = require("../models/Expense");
-const { isValidObjectId, Types } = require("mongoose");
+import Income from "../models/Income.js";
+import Expense from "../models/Expense.js";
+import { Types } from "mongoose";
 
 // Dashboard Data
-exports.getDashboardData = async (req, res) => {
+export const getDashboardData = async (req, res) => {
   try {
     const userId = req.user.id;
     const userObjectId = new Types.ObjectId(String(userId));
@@ -25,7 +25,6 @@ exports.getDashboardData = async (req, res) => {
       date: { $gte: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000) },
     }).sort({ date: -1 });
 
-    //Get total income for last 60 days
     const incomeLast60Days = last60DaysIncomeTransactions.reduce(
       (sum, transaction) => sum + transaction.amount,
       0
@@ -37,7 +36,6 @@ exports.getDashboardData = async (req, res) => {
       date: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
     }).sort({ date: -1 });
 
-    // Get total expenses for last 30 days
     const expensesLast30Days = last30DaysExpenseTransactions.reduce(
       (sum, transaction) => sum + transaction.amount,
       0
@@ -46,18 +44,12 @@ exports.getDashboardData = async (req, res) => {
     // Fetch last 5 transactions (income + expenses)
     const lastTransactions = [
       ...(await Income.find({ userId }).sort({ date: -1 }).limit(5)).map(
-        (txn) => ({
-          ...txn.toObject(),
-          type: "income",
-        })
+        (txn) => ({ ...txn.toObject(), type: "income" })
       ),
       ...(await Expense.find({ userId }).sort({ date: -1 }).limit(5)).map(
-        (txn) => ({
-          ...txn.toObject(),
-          type: "expense",
-        })
+        (txn) => ({ ...txn.toObject(), type: "expense" })
       ),
-    ].sort((a, b) => b.date - a.date); //sort latest first
+    ].sort((a, b) => b.date - a.date); // Latest first
 
     // Final Response
     res.json({
@@ -76,6 +68,6 @@ exports.getDashboardData = async (req, res) => {
       recentTransactions: lastTransactions,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server Error", error });
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 };

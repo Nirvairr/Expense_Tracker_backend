@@ -1,12 +1,13 @@
-const express = require("express");
-const upload = require("../middleware/uploadMiddleware");
-const {
-  registerUser,
-  loginUser,
-  getUserInfo,
+import express from "express";
+
+import protect from "../middleware/authMiddleWare.js";
+import upload from "../middleware/uploadMiddleware.js";
+import {
   editUser,
-} = require("../controllers/authController");
-const { protect } = require("../middleware/authMiddleware");
+  getUserInfo,
+  loginUser,
+  registerUser,
+} from "../controllers/authController.js";
 
 const router = express.Router();
 
@@ -20,10 +21,8 @@ router.post("/upload-image", upload.single("image"), (req, res) => {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
-  // This is the Cloudinary-hosted URL
-  const imageUrl = req.file.path;
-
+  const imageUrl = req.file.path; // Cloudinary URL
   return res.status(200).json({ imageUrl });
 });
 
-module.exports = router;
+export default router;

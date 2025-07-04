@@ -1,5 +1,5 @@
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
+import User from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 // Generate JWT token
 const generateToken = (id) => {
@@ -7,7 +7,7 @@ const generateToken = (id) => {
 };
 
 // Register user
-exports.registerUser = async (req, res) => {
+export const registerUser = async (req, res) => {
   const { fullName, email, password, profileImageUrl } = req.body;
 
   if (!fullName || !email || !password) {
@@ -40,7 +40,7 @@ exports.registerUser = async (req, res) => {
 };
 
 // Edit user
-exports.editUser = async (req, res) => {
+export const editUser = async (req, res) => {
   try {
     const userId = req.params.id;
     const { fullName, email, password, profileImageUrl } = req.body;
@@ -62,7 +62,6 @@ exports.editUser = async (req, res) => {
     user.fullName = fullName;
     user.email = email;
 
-    // Let the Mongoose pre-save hook handle hashing
     if (password && password.trim() !== "") {
       user.password = password;
     }
@@ -85,7 +84,7 @@ exports.editUser = async (req, res) => {
 };
 
 // Login user
-exports.loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -111,7 +110,7 @@ exports.loginUser = async (req, res) => {
 };
 
 // Get user info
-exports.getUserInfo = async (req, res) => {
+export const getUserInfo = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
 
